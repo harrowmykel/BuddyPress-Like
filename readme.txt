@@ -38,6 +38,7 @@ Gives users the ability to 'like' content across your BuddyPress enabled site.
 == Screenshots ==
 1. Screenshot of what the like button looks like by default on activity
 2. Screenshot of settings available in admin settings
+3 - 8 Random Screenshots about the plugin
 
 == Changelog ==
 = 0.5.2 =

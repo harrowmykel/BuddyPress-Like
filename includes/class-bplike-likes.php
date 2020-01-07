@@ -159,8 +159,10 @@ class BPLIKE_LIKES {
 
 		// Get activities from user meta.
 		$liked_activity_entries = bp_get_user_meta( $user_id, 'bp_liked_activities', true );
-		if ( ! empty( $liked_activity_entries ) ) {
-			return count( maybe_unserialize( $liked_activity_entries ) );
+		if ( ! empty( $liked_activity_entries ) ) {			
+		    $entries = maybe_unserialize( $liked_activity_entries );
+		    if(is_countable($entries))
+		    	return count( $entries );
 		}
 
 		// No likes.
