@@ -47,13 +47,25 @@ function bplike_activity_comment_button() {
     $vars = bp_like_get_template_vars( $id, $type );
     extract( $vars );
 
+
+    if(bp_like_use_ajax()):
     ?>
-    <a href="#" class="activity_comment bp-primary-action <?php echo $classes ?>"
-        id="bp-like-activity-comment-<?php echo $id; ?>"
-        title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
-        <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
-        <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
-        <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
-    </a>
+        <a href="#" class="activity_comment bp-primary-action <?php echo $classes ?>"
+            id="bp-like-activity-comment-<?php echo $id; ?>"
+            title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
+    <!-- not ajax -->
+    <?php else: ?>
+        <a href="<?php echo $static_like_unlike_link; ?>" class="activity_comment bp-primary-action no-ajax <?php echo $classes ?>"
+            id="bp-like-activity-comment-<?php echo $id; ?>"
+            title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
     <?php
+    endif;
 }

@@ -29,9 +29,28 @@ function bplike_blog_post_comment_button( $content ) {
     extract( $vars );
     ob_start();
 
-    ?><br><a class="blogpost_comment <?php echo $classes; ?>" id="bp-like-blogpost-comment-<?php echo get_comment_ID(); ?>" title="<?php echo $title; ?>" data-like-type="blog_post_comment"><span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span><span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span><span class="like-count"><?php echo ($liked_count?$liked_count:''); ?></span></a><br><?php
+    if(bp_like_use_ajax()):
+    ?>
+    <br>
+    <a class="blogpost_comment <?php echo $classes; ?>" id="bp-like-blogpost-comment-<?php echo get_comment_ID(); ?>" title="<?php echo $title; ?>" data-like-type="blog_post_comment">
+        <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+        <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+        <span class="like-count"><?php echo ($liked_count?$liked_count:''); ?></span>
+    </a>
+    <br>
+    <!-- not ajax -->
+    <?php else: ?>
+        <br>
+        <a href="<?php echo $static_like_unlike_link; ?>"  class="blogpost_comment <?php echo $classes; ?>" id="bp-like-blogpost-comment-<?php echo get_comment_ID(); ?>" title="<?php echo $title; ?>" data-like-type="blog_post_comment">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ($liked_count?$liked_count:''); ?></span>
+        </a>
+        <br>
+    <?php
+    endif;
 
-    view_who_likes( get_comment_ID(), 'blog_post_comment', '<span', '</span>');
+    bp_like_view_who_likes( get_comment_ID(), 'blog_post_comment', '<span', '</span>');
 
 	$content .= ob_get_clean();
 

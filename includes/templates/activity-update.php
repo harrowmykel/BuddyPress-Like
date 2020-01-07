@@ -60,17 +60,29 @@ function bplike_activity_update_button() {
     $vars = bp_like_get_template_vars( $id, $type );
     extract( $vars );
 
-   ?>
-    <a class="button bp-primary-action <?php echo $classes ?>"
-        id="bp-like-activity-<?php echo $id; ?>"
-        title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
-        <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
-        <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
-        <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
-    </a>
+    if(bp_like_use_ajax()):
+    ?>
+        
+        <a class="button bp-primary-action <?php echo $classes ?>"
+            id="bp-like-activity-<?php echo $id; ?>"
+            title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
+    <!-- not ajax -->
+    <?php else: ?>
+        <a href="<?php echo $static_like_unlike_link; ?>" class="button bp-primary-action <?php echo $classes ?>"
+            id="bp-like-activity-<?php echo $id; ?>"
+            title="<?php echo $title ?>" data-like-type="<?php echo $type ?>">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
     <?php
+    endif;
 
     // Checking if there are users who like item.
-    view_who_likes( $id, $type );
+    bp_like_view_who_likes( $id, $type );
 
 }

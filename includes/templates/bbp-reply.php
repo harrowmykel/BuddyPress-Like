@@ -28,6 +28,7 @@ function bplike_bbp_reply_button() {
     $vars = bp_like_get_template_vars( bbp_get_reply_id(), 'blog_post' );
     extract( $vars );
 
+    if(bp_like_use_ajax()):
     ?>
         <a class="bbp-reply <?php echo $classes ?>" id="bp-like-bbp-reply-<?php echo bbp_get_reply_id(); ?>"
            title="<?php echo $title; ?>" data-like-type="blog_post">
@@ -35,9 +36,18 @@ function bplike_bbp_reply_button() {
             <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
             <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
         </a>
+    <!-- not ajax -->
+    <?php else: ?>
+        <a href="<?php echo $static_like_unlike_link; ?>" class="bbp-reply <?php echo $classes ?>" id="bp-like-bbp-reply-<?php echo bbp_get_reply_id(); ?>"
+           title="<?php echo $title; ?>" data-like-type="blog_post">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
     <?php
+    endif;
 
-    view_who_likes( bbp_get_reply_id(), 'blog_post');
+    bp_like_view_who_likes( bbp_get_reply_id(), 'blog_post');
 
 }
 add_action('bbp_theme_after_reply_content', 'bplike_bbp_reply_button');

@@ -83,6 +83,11 @@ function bp_like_admin_page() {
             'bp_like_post_types'       => isset( $_POST['bp_like_post_types'] ) ? $_POST['bp_like_post_types'] : array(),
             'bp_like_toggle_button'    => isset( $_POST['bp_like_toggle_button'] ) ? $_POST['bp_like_toggle_button'] : null,
             'enable_notifications'     => isset( $_POST['enable_notifications'] ) ? $_POST['enable_notifications'] : null,
+
+            'bp_like_use_ajax_for_likes'     => isset( $_POST['bp_like_use_ajax_for_likes'] ) ? $_POST['bp_like_use_ajax_for_likes'] : null,
+            'bp_like_name_or_avatar'     => isset( $_POST['bp_like_name_or_avatar'] ) ? $_POST['bp_like_name_or_avatar'] : null,
+            'bp_like_name_or_avatar_position'     => isset( $_POST['bp_like_name_or_avatar_position'] ) ? $_POST['bp_like_name_or_avatar_position'] : null,
+            'bp_likes_view_all_page'     => isset( $_POST['bp_likes_view_all_page'] ) ? $_POST['bp_likes_view_all_page'] : null,
             )
         );
 
@@ -234,6 +239,114 @@ function bp_like_admin_page() {
                             <label for="enable_notifications">
                                 <?php _e( "Enable notifications.", 'buddypress-like' ); ?>
                             </label>
+                            <br />
+                        </fieldset>
+                    </td>
+                </tr>
+                
+                <!-- custom code -->
+                <tr valign="top">
+                    <th scope="row"><?php _e( 'Use Ajax' , 'buddypress-like' ); ?></th>
+                    <td>
+                        <fieldset>
+                            <legend class="screen-reader-text">
+                                <span><?php _e( 'Use Ajax' , 'buddypress-like' ); ?></span>
+                            </legend>
+                            <input type="checkbox" id="bp_like_use_ajax_for_likes" name="bp_like_use_ajax_for_likes" value="1" <?php if ( bp_like_get_settings( 'bp_like_use_ajax_for_likes' ) == 1 ) { echo ' checked="checked" '; } ?>>
+                            <label for="bp_like_use_ajax_for_likes">
+                                <?php _e( "Use Ajax to like posts or use direct urls." , 'buddypress-like' ); ?>
+                            </label>
+                            <p class="description"><?php echo __( " JS is required for Ajax. this option is to support low end devices." , "buddypress-like" ); ?></p>
+                            <br />
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e( 'Show Names and Avatars' , 'buddypress-like' ); ?></th>
+                    <td>
+                        <fieldset>
+                            <legend class="screen-reader-text">
+                                <span><?php _e( 'Show Names and Avatars' , 'buddypress-like' ); ?></span>
+                            </legend>
+                            <?php  $bplikes_name_or_avatar_options = array(
+                                                array("name"=>__("Names and Pictures", 'buddypress-like' ),
+                                                    "value" => "names_and_pictures"),
+                                                array("name"=> __("Names Only", 'buddypress-like' ),
+                                                    "value" => "names_only"),
+                                                array("name"=> __("Pictures Only", 'buddypress-like' ),
+                                                    "value" => "pictures_only")
+                                    ); ?>
+                            <select id="bp_like_name_or_avatar" name="bp_like_name_or_avatar">
+                                <?php
+                                foreach ($bplikes_name_or_avatar_options as $key => $bplikes_name_or_avatar_option):?> 
+                                <option value="<?php echo $bplikes_name_or_avatar_option["value"]; ?>" <?php if ( bp_like_get_settings( 'bp_like_name_or_avatar' ) == $bplikes_name_or_avatar_option["value"] ) { echo ' selected ';} ?> ><?php echo $bplikes_name_or_avatar_option["name"]; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                            <label for="bp_like_name_or_avatar">
+                                <?php _e( "Show names and avatar?" , 'buddypress-like' ); ?>
+                            </label>
+                            <p class="description"><?php echo __( " This option chooses what should be shown. To speed up load time, you may choose Names only" , "buddypress-like" ); ?></p>
+                            <br />
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e( 'Position of Names and Avatars' , 'buddypress-like' ); ?></th>
+                    <td>
+                        <fieldset>
+                            <legend class="screen-reader-text">
+                                <span><?php _e( 'How to show Names and Avatars' , 'buddypress-like' ); ?></span>
+                            </legend>
+                            <?php  $bplikes_name_or_avatar_position_options = array(
+                                                array("name"=>__("Each Name in front of each Picture", 'buddypress-like' ),
+                                                    "value" => "each_name_in_front_of_each_picture"),
+                                                array("name"=>__("Each Name behind each Picture", 'buddypress-like' ),
+                                                    "value" => "each_name_behind_each_picture"),
+                                                array("name"=> __("All Names in front of all Pictures", 'buddypress-like' ),
+                                                    "value" => "all_names_in_front_of_all_pictures"),
+                                                array("name"=> __("All Names behind all Pictures", 'buddypress-like' ),
+                                                    "value" => "all_names_behind_all_pictures")
+                                    ); ?>
+                            <select id="bp_like_name_or_avatar_position" name="bp_like_name_or_avatar_position">
+                                <?php
+                                foreach ($bplikes_name_or_avatar_position_options as $key => $bplikes_name_or_avatar_position_option):?> 
+                                <option value="<?php echo $bplikes_name_or_avatar_position_option["value"]; ?>" <?php if ( bp_like_get_settings( 'bp_like_name_or_avatar_position' ) == $bplikes_name_or_avatar_position_option["value"] ) { echo ' selected ';} ?>><?php echo $bplikes_name_or_avatar_position_option["name"]; ?></option>
+                                <?php endforeach;?>
+                            </select>
+                            <label for="bp_like_name_or_avatar_position">
+                                <?php _e( "Position of Names and Avatars" , 'buddypress-like' ); ?>
+                            </label>
+                            <p class="description"><?php echo __( " This option is only available if Names and Avatar is to selected above" , "buddypress-like" ); ?></p>
+                            <br />
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e( 'Choose page for showing users who liked post' , 'buddypress-like' ); ?></th>
+                    <td>
+                        <fieldset>
+                            <legend class="screen-reader-text">
+                                <span><?php _e( 'Choose page for showing users who liked post' , 'buddypress-like' ); ?></span>
+                            </legend>
+
+                            <select id="bp_likes_view_all_page" name="bp_likes_view_all_page">
+                                 <option value="0">
+                                <?php echo esc_attr( __( 'Select page', 'buddypress-like' ) ); ?></option> 
+                                 <?php 
+                                  $pages = get_pages(); 
+                                  foreach ( $pages as $page ) {
+                                    $selection = ( bp_like_get_settings( 'bp_likes_view_all_page' ) == $page->ID )?' selected ':'';
+                                    $option = '<option value="' . $page->ID . '" '.$selection.'>';
+                                    $option .= $page->post_title;
+                                    $option .= '</option>';
+                                    echo $option;
+                                  }
+                                 ?>
+                            </select>
+                            <label for="bp_likes_view_all_page">
+                                <?php _e( "Choose page for showing users who liked post" , 'buddypress-like' ); ?>
+                            </label>
+                            <p class="description"><?php echo __( "Make sure to add the shortcode on the page [bp-likers] " , "buddypress-like" ); ?></p>
                             <br />
                         </fieldset>
                     </td>

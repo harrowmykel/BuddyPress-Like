@@ -37,3 +37,13 @@ function bp_like_remove_favourites() {
         add_action( 'wp_before_admin_bar_render' , 'bp_like_admin_bar_render_remove_favorites' );
     }
 }
+
+
+/**
+ * use ajax for like buttons or direct links
+ *
+ * @return     boolean
+ */
+function bp_like_use_ajax(){
+    return apply_filters( 'bp_like_use_ajax_for_likes', !empty(bp_like_get_settings('bp_like_use_ajax_for_likes')));
+}

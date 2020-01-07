@@ -29,15 +29,26 @@ function bplike_blog_post_button( $content ) {
     extract( $vars );
     ob_start();
 
-    ?><a class="blogpost <?php echo $classes; ?>" id="bp-like-blogpost-<?php echo get_the_ID(); ?>"
+    if(bp_like_use_ajax()):
+    ?>
+        <a class="blogpost <?php echo $classes; ?>" id="bp-like-blogpost-<?php echo get_the_ID(); ?>"
          title="<?php echo $title; ?>" data-like-type="blog_post">
             <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
             <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
-			<span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
-     	</a>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
+    <!-- not ajax -->
+    <?php else: ?>
+        <a href="<?php echo $static_like_unlike_link; ?>" class="blogpost <?php echo $classes; ?>" id="bp-like-blogpost-<?php echo get_the_ID(); ?>"
+         title="<?php echo $title; ?>" data-like-type="blog_post">
+            <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
+            <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
+            <span class="like-count"><?php echo ( $liked_count ? $liked_count : '' ) ?></span>
+        </a>
     <?php
+    endif;
 
-    view_who_likes( get_the_ID(), 'blog_post');
+    bp_like_view_who_likes( get_the_ID(), 'blog_post');
 
 	$content .= ob_get_clean();
 
