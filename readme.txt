@@ -41,6 +41,13 @@ Gives users the ability to 'like' content across your BuddyPress enabled site.
 3 - 8 Random Screenshots about the plugin
 
 == Changelog ==
+
+= 1.0.0 =
+- Added Avatar Supports
+- Added non Ajax Supports
+- Added More Screenshots
+- Added Shortcode to list all who liked post
+
 = 0.5.2 =
 - Fixes PHP notices on install and settings save
 
