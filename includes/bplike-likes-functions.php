@@ -78,3 +78,8 @@ function bplike_total_likes_for_user( $user_id = 0 ) {
 
 	return BPLIKE_LIKES::total_liked_count( $user_id );
 }
+
+function bp_like_pass_members_query_to_core(){
+	global  $bp_like_members_display_query;
+	return $qs .=  $bp_like_members_display_query;
+}

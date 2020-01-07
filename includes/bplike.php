@@ -44,12 +44,14 @@ require_once( BPLIKE_PATH . 'includes/templates/activity-comment.php' );
 require_once( BPLIKE_PATH . 'includes/install-functions.php' );
 require_once( BPLIKE_PATH . 'includes/activity-functions.php' );
 require_once( BPLIKE_PATH . 'includes/ajax.php' );
+require_once( BPLIKE_PATH . 'includes/no-ajax.php' );
 require_once( BPLIKE_PATH . 'includes/like-functions.php' );
 require_once( BPLIKE_PATH . 'includes/scripts.php' );
 require_once( BPLIKE_PATH . 'includes/settings.php' );
 require_once( BPLIKE_PATH . 'includes/class-bplike-likes.php' );
 require_once( BPLIKE_PATH . 'includes/screens.php' );
 require_once( BPLIKE_PATH . 'includes/template.php' );
+require_once( BPLIKE_PATH . 'includes/shortcodes.php' );
 require_once( BPLIKE_PATH . 'includes/bplike-likes-functions.php' );
 
 

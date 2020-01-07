@@ -255,7 +255,12 @@ function bp_like_remove_user_like( $item_id = '' , $type = '' ) {
  */
 function bp_like_get_some_likes( $id, $type, $start, $end) {
 
-	$users_who_like = BPLIKE_LIKES::get_likers($id, $type);
+    $string_to_display = "";
+    $users_to_display_ids = [];
+    /*variable holds the number of others to show, -1 means no value*/
+    $others_count = -1;
+
+    $users_who_like = BPLIKE_LIKES::get_likers($id, $type);
 
     $string = $start . ' class="users-who-like" id="users-who-like-' . $id . '">';
 
@@ -266,9 +271,8 @@ function bp_like_get_some_likes( $id, $type, $start, $end) {
 
         } elseif ( count( $users_who_like ) == 1 ) {
 
-            $string .= '<small>';
-            $string .= bp_like_get_text( 'get_likes_only_liker' );
-            $string .= '</small>';
+            $string_to_display = bp_like_get_text( 'get_likes_only_liker' );
+            $users_to_display_ids[] = get_current_user_id();
 
         } elseif ( count( $users_who_like ) == 2 ) {
 
@@ -278,13 +282,8 @@ function bp_like_get_some_likes( $id, $type, $start, $end) {
             // removing current user from $users_who_like
             array_splice( $users_who_like, $key, 1 );
 
-            $one = bp_core_get_userlink( $users_who_like[0] );
-
-            $string .= '<small>';
-            $string .= bp_like_get_text( 'you_and_username_like_this' );
-            $string .= '</small>';
-
-            $string = sprintf( $string , $one );
+            $string_to_display = bp_like_get_text( 'you_and_username_like_this' );
+            $users_to_display_ids[] = $users_who_like[0];
 
         } elseif ( count( $users_who_like ) == 3 ) {
 
@@ -294,14 +293,10 @@ function bp_like_get_some_likes( $id, $type, $start, $end) {
               array_splice( $users_who_like, $key, 1 );
 
               $others = count ($users_who_like);
-              $one = bp_core_get_userlink( $users_who_like[$others - 2] );
-              $two = bp_core_get_userlink( $users_who_like[$others - 1] );
 
-              $string .= '<small>';
-              $string .= bp_like_get_text( 'you_and_two_usernames_like_this' );
-              $string .= '</small>';
-
-              $string = sprintf( $string , $one , $two );
+              $string_to_display = bp_like_get_text( 'you_and_two_usernames_like_this' );
+              $users_to_display_ids[] = $users_who_like[$others - 2];
+              $users_to_display_ids[] = $users_who_like[$others - 1];
 
         } elseif (  count( $users_who_like ) > 3 ) {
 
@@ -311,17 +306,13 @@ function bp_like_get_some_likes( $id, $type, $start, $end) {
               array_splice( $users_who_like, $key, 1 );
 
               $others = count ($users_who_like);
-
-              // output last two people to like (2 at end of array)
-              $one = bp_core_get_userlink( $users_who_like[$others - 2] );
-              $two = bp_core_get_userlink( $users_who_like[$others - 1] );
-
               $others = $others - 2;
-              $string .= '<small>';
-              $string .= _n( 'You, %s, %s and %d other like this.', 'You, %s, %s and %d others like this.', $others, 'buddypress-like' );
-              $string .= '</small>';
 
-              $string = sprintf( $string , $one , $two , $others );
+              $string_to_display = _n( 'You, %s, %s and %s other like this.', 'You, %s, %s and %s others like this.', $others, 'buddypress-like' );
+              // output last two people to like (2 at end of array)
+              $users_to_display_ids[] = $users_who_like[$others - 2];
+              $users_to_display_ids[] = $users_who_like[$others - 1];
+              $others_count = $others;
         }
     } else {
 
@@ -330,58 +321,223 @@ function bp_like_get_some_likes( $id, $type, $start, $end) {
 
         } elseif ( count( $users_who_like ) == 1 ) {
 
-            $string .= '<small>';
-            $string .= bp_like_get_text( 'one_likes_this' );
-            $string .= '</small>';
-
-            $one = bp_core_get_userlink( $users_who_like[0] );
-
-            $string = sprintf($string, $one);
+            $string_to_display = bp_like_get_text( 'one_likes_this' );
+            $users_to_display_ids[] = $users_who_like[0];
 
         } elseif ( count( $users_who_like ) == 2 ) {
 
-            $one = bp_core_get_userlink( $users_who_like[0] );
-            $two = bp_core_get_userlink( $users_who_like[1] );
-
-            $string .= '<small>';
-            $string .= bp_like_get_text( 'two_like_this' );
-            $string .= '</small>';
-
-            $string = sprintf( $string , $one, $two );
+            $string_to_display = bp_like_get_text( 'two_like_this' );
+            $users_to_display_ids[] = $users_who_like[0];
+            $users_to_display_ids[] = $users_who_like[1];
 
         } elseif ( count( $users_who_like ) == 3 ) {
 
-              $one = bp_core_get_userlink( $users_who_like[0] );
-              $two = bp_core_get_userlink( $users_who_like[1] );
-              $three = bp_core_get_userlink( $users_who_like[2] );
-
-              $string .= '<small>';
-              $string .= bp_like_get_text( 'three_like_this' );
-              $string .= '</small>';
-
-              $string = sprintf( $string , $one , $two, $three );
+            $string_to_display = bp_like_get_text( 'three_like_this' );
+            $users_to_display_ids[] = $users_who_like[0];
+            $users_to_display_ids[] = $users_who_like[1];
+            $users_to_display_ids[] = $users_who_like[2];
 
         } elseif (  count( $users_who_like ) > 3 ) {
 
               $others = count ($users_who_like);
 
               // output last two people to like (3 at end of array)
-              $one = bp_core_get_userlink( $users_who_like[ $others - 1] );
-              $two = bp_core_get_userlink( $users_who_like[$others - 2] );
-              $three = bp_core_get_userlink( $users_who_like[$others - 3] );
-
-              $others = $others - 3;
-
-              $string .= '<small>';
-              $string .= _n('%s, %s, %s and %d other like this.', '%s, %s, %s and %d others like this.', $others, 'buddypress-like' );
-              $string .= '</small>';
-
-              $string = sprintf( $string , $one , $two , $three, $others );
-              //error_log("Like: $string");
+              $string_to_display = _n('%s, %s, %s and %s other like this.', '%s, %s, %s and %s others like this.', $others, 'buddypress-like' );
+              $users_to_display_ids[] = $users_who_like[ $others - 1];
+              $users_to_display_ids[] = $users_who_like[$others - 2];
+              $users_to_display_ids[] = $users_who_like[$others - 3];
+              $others_count = $others - 3;
         }
     }
 
+    $bp_like_name_or_avatar = bp_like_get_settings( 'bp_like_name_or_avatar' );
+    $bp_like_name_or_avatar_position = bp_like_get_settings( 'bp_like_name_or_avatar_position' );
+
+    //separator between names
+    $bp_like_names_separator = apply_filters("bp_like_names_separator", ", ");
+    //separator between avatars
+    $bp_like_avatar_separator = apply_filters("bp_like_avatar_separator", "");
+    //separator between names and avatars
+    $bp_like_names_and_avatar_separator = apply_filters("bp_like_names_and_avatar_separator", "");
+
+    $users_html_to_replace_with = [];
+    $string .= "<small>";
+
+    switch ($bp_like_name_or_avatar) {
+      case 'names_only':
+        $users_html_to_replace_with = bp_like_get_all_user_links($users_to_display_ids);
+        break;
+      case 'pictures_only':
+        $users_html_to_replace_with = bp_like_get_all_users_avatar($users_to_display_ids);
+        break;
+      case 'names_and_pictures':
+      default:
+        $all_users_avatars = bp_like_get_all_users_avatar($users_to_display_ids);
+        $all_users_links = bp_like_get_all_user_links($users_to_display_ids);
+
+        if($bp_like_name_or_avatar_position == "all_names_behind_all_pictures"){
+
+            $all_users_avatars_string = implode ( $bp_like_avatar_separator, $all_users_avatars ); 
+            $users_html_to_replace_with = $all_users_links;
+            //put pictures in first position of array;
+            $users_html_to_replace_with[0] = $all_users_avatars_string . $users_html_to_replace_with[0];
+
+        }else if($bp_like_name_or_avatar_position == "all_names_in_front_of_all_pictures"){
+
+            $all_users_links_string = implode ( $bp_like_names_separator, $all_users_links ); 
+            $users_html_to_replace_with = $all_users_avatars;
+            //put pictures in first position of array;
+            $users_html_to_replace_with[0] = $all_users_links_string . $users_html_to_replace_with[0];
+
+        }else if($bp_like_name_or_avatar_position == "each_name_in_front_of_each_picture"){
+            //fill up
+            foreach ($all_users_links as $key => $current_users_link) {             
+              $users_html_to_replace_with[$key] = $all_users_links[$key] . $bp_like_names_and_avatar_separator.$all_users_avatars[$key];
+            }
+
+        }else{
+          //each_name_behind_each_picture
+          //fill up
+          foreach ($all_users_links as $key => $current_users_link) {             
+            $users_html_to_replace_with[$key] = $all_users_avatars[$key] . $bp_like_names_and_avatar_separator.$all_users_links[$key];
+          }
+        }
+    }
+    //catch others string/digit
+    if($others_count != -1){
+      $users_html_to_replace_with[] = $others_count;
+    }
+    $string .= bp_like_replace_strings_variables($id, $type, $string_to_display, $users_html_to_replace_with, $others_count);
+    $string .= "</small>";
     echo $string;
+}
+
+
+/**
+ * Gets all avatar for each user id in array.
+ *
+ * @param      array    $users_to_display_ids         The users to display identifiers
+ * @param      boolean  $return_array                 if function should return array 
+ * @param      boolean  $link_images_to_user_profile  if function should hyperlink images to user profile
+ * @param      string   $separator                    The separator
+ *
+ * @return     <type>   All pictures links.
+ */
+function bp_like_get_all_users_avatar($users_to_display_ids = array() , $return_array = true, $link_images_to_user_profile = true, $separator = ""){  
+    $users_html_to_replace_with = [];
+   foreach ($users_to_display_ids as $key => $user_to_display_id) {
+      //get only link to profile
+      $user_link_to_profile = bp_core_get_userlink($user_to_display_id, false, true);
+      //if user exists
+      if(!empty($user_link_to_profile)){
+        $user_avatar_html = bp_core_fetch_avatar(array( 
+                  'item_id' => $user_to_display_id,  
+                  'object' => 'user',  
+                  'type' => 'thumb',    
+                  'width' => 20,  
+                  'height' => 20,  
+                  'class' => 'avatar like-avatar',  
+                  'css_id' => 'like-avatar-user-'.$users_to_display_ids)
+                  );
+        if($link_images_to_user_profile){
+          $users_html_to_replace_with[] = "<a href='".$user_link_to_profile."'>".$user_avatar_html."</a>";
+        }else{
+          $users_html_to_replace_with[] = $user_avatar_html;
+        }        
+      }else{
+        $users_html_to_replace_with[] = '';
+      }
+    }
+  if($return_array){
+    return $users_html_to_replace_with;
+  }
+  //convert array to string using separator
+  return implode ( $separator , $users_html_to_replace_with ); 
+}
+
+
+/**
+ * Gets all links for each user id in array.
+ *
+ * @param      array    $users_to_display_ids          The users to display identifiers
+ * @param      boolean  $return_array                  if function should return
+ *                                                     array
+ * @param      string   $separator                     The separator
+ *
+ * @return     <type>   All Strings links.
+ */
+function bp_like_get_all_user_links($users_to_display_ids = array() , $return_array = true, $separator = ""){   
+    $users_html_to_replace_with = [];
+   foreach ($users_to_display_ids as $key => $user_to_display_id) {
+      //get only link to profile
+      $users_html_to_replace_with[] = bp_core_get_userlink($user_to_display_id);
+    }
+  if($return_array){
+    return $users_html_to_replace_with;
+  }
+  //convert array to string using separator
+  return implode ( $separator , $users_html_to_replace_with ); 
+}
+
+/**
+ * replaces strings variables with sprintf
+ *
+ * @param      int, string  $item_id                     The item identifier
+ * @param      string  $content_type                The content type
+ * @param      string  $string_to_display           The string to display
+ * @param      array   $users_html_to_replace_with  The users html to replace %s
+ *                                                  with
+ *
+ * @return     <type>  ( description_of_the_return_value )
+ */
+function bp_like_replace_strings_variables($item_id, $content_type, $string_to_display = "", $users_html_to_replace_with = array(), $others_count = -1){
+  $string = "";
+  //we know max showing count of users for like is 3
+  //so switch goes till 4, the 4th variable is the others count
+  // @see bp_like_get_some_likes()
+  $users_html_to_replace_with_count = count($users_html_to_replace_with);
+  switch ($users_html_to_replace_with_count) {
+    case 1:
+        $string = sprintf($string_to_display, $users_html_to_replace_with[0]);
+      break;
+    case 2:
+        $string = sprintf($string_to_display, $users_html_to_replace_with[0], $users_html_to_replace_with[1]);
+      break;
+    case 3:
+    case 4:
+        if($others_count != -1){
+            $page_for_viewing_likes_id = bp_like_get_settings("bp_likes_view_all_page");
+            //if it has been set
+            if(!empty($page_for_viewing_likes_id) && $page_for_viewing_likes_id != 0){
+              $link_to_see_all_likes = esc_url( add_query_arg( array( 
+                                              'bpl_type' => $content_type,
+                                              'bpl_id' => $item_id ), 
+                                            get_page_link($page_for_viewing_likes_id) ) 
+                                      );
+              $link_to_see_all_likes = apply_filters( 'bp_link_like_display_page_link', $link_to_see_all_likes, $page_for_viewing_likes_id, $item_id, $content_type );
+
+              if($users_html_to_replace_with_count == 3){
+                $link_to_see_all_likes = "<a class='bp_like_view_all_likes_link' href='".$link_to_see_all_likes."'>".$users_html_to_replace_with[2]."</a>";
+
+                $string = sprintf($string_to_display, $users_html_to_replace_with[0], $users_html_to_replace_with[1], $link_to_see_all_likes);
+              }else{
+                $link_to_see_all_likes = "<a class='bp_like_view_all_likes_link' href='".$link_to_see_all_likes."'>".$users_html_to_replace_with[3]."</a>";
+                
+                $string = sprintf($string_to_display, $users_html_to_replace_with[0], $users_html_to_replace_with[1], $users_html_to_replace_with[2], $link_to_see_all_likes);
+              }
+            }else{
+              $string = sprintf($string_to_display, $users_html_to_replace_with[0], $users_html_to_replace_with[1], $users_html_to_replace_with[2], $users_html_to_replace_with[4]);
+            }
+        }else{ 
+          $string = sprintf($string_to_display, $users_html_to_replace_with[0], $users_html_to_replace_with[1], $users_html_to_replace_with[2]);
+        }
+      break;
+    default:
+        //nothing to replace
+        $string = $string_to_display;
+      break;
+  }
+  return $string;
 }
 
 
@@ -395,28 +551,48 @@ function bp_like_get_template_vars( $id, $type ) {
   $vars = array();
 
   $is_liked = bp_like_is_liked( $id, $type, get_current_user_id() );
-  $vars['classes']  = $is_liked?'unlike':'like';
+  $vars['user-has-liked']  = $is_liked;
+  if(bp_like_use_ajax()){
+    $vars['classes']  = $is_liked?'unlike':'like';
+  }else{
+    $vars['classes']  = $is_liked?'no-ajax-unlike':'no-ajax-like';    
+  }
   $vars['classes'] .= bp_like_get_settings('bp_like_toggle_button')?' toggle':'';
   $vars['liked_count'] = count(  BPLIKE_LIKES::get_likers( $id, $type) );
   $vars['title'] = bp_like_get_text( ( $is_liked?'unlike_this_item':'like_this_item' ) );
+  $vars['static_like_unlike_link'] = $is_liked?bp_like_get_item_unlike_link($type):bp_like_get_item_like_link($type);
 
   return $vars;
 }
 
 /**
- *
- * view_who_likes() hook
+ *  @since 1.0;
+ * bp_like_view_who_likes() hook
  *
  */
-function view_who_likes( $id,  $type, $start = '<p', $end = '</p>') {
+function bp_like_view_who_likes( $id,  $type, $start = '<p', $end = '</p>') {
 
-    do_action( 'bp_like_before_view_who_likes' );
+    do_action( 'bp_like_before_bp_like_view_who_likes' );
 
-    do_action( 'view_who_likes', $id, $type, $start, $end );
+    do_action( 'bp_like_view_who_likes', $id, $type, $start, $end );
 
-    do_action( 'bp_like_after_view_who_likes' );
+    do_action( 'bp_like_after_bp_like_view_who_likes' );
 
 }
 
 // TODO comment why this is here
-add_action( 'view_who_likes' , 'bp_like_get_some_likes', 10, 4 );
+add_action( 'bp_like_view_who_likes' , 'bp_like_get_some_likes', 10, 4 );
+
+
+
+/**
+ * @deprecated
+ *
+ * @param      <type>  $id     The identifier
+ * @param      <type>  $type   The type
+ * @param      string  $start  The start
+ * @param      string  $end    The end
+ */
+function view_who_likes($id,  $type, $start = '<p', $end = '</p>'){
+  bp_like_view_who_likes( $id,  $type, $start = '<p', $end = '</p>');
+}

@@ -35,11 +35,11 @@ function bp_like_ajax_get_likes() {
 
   if ( $_POST['type'] == 'blog_post_comment' ) {
 
-    view_who_likes( $id , 'blog_post_comment',  '<span', '</span>' );
+    bp_like_view_who_likes( $id , 'blog_post_comment',  '<span', '</span>' );
 
   } else {
 
-      view_who_likes( $id , $_POST['type'] );
+      bp_like_view_who_likes( $id , $_POST['type'] );
 
   }
 
