@@ -4,8 +4,8 @@
   Plugin Name: BuddyPress Like
   Plugin URI: http://darrenmeehan.me/
   Description: Adds the ability for users to like content throughout your BuddyPress site.
-  Author: Darren Meehan, Christoph Herbst
-  Version: 0.5.2-konnektiv
+  Author: Darren Meehan, Christoph Herbst, Aro Micheal
+  Version: 1.0.0-konnektiv
   Author URI: http://darrenmeehan.me
   Text Domain: buddypress-like
 
@@ -54,3 +54,9 @@ function bp_like_activate() {
 	dbDelta( $sql );
 }
 register_activation_hook( __FILE__, 'bp_like_activate' );
+
+
+
+/*global variable for holding members query for 
+ shortcode;*/
+ $bp_like_members_display_query = "";

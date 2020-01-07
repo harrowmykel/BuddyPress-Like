@@ -1,9 +1,9 @@
 === BuddyPress Like ===
-Contributors: darrenmeehan, cherbst, sjregan, zipline
+Contributors: darrenmeehan, cherbst, sjregan, zipline, harrowmykel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAJLLEJDBHAWL
 Tags: buddypress, like, rate, thumbs, post, button, vote
 Requires at least: WordPress 3.8, BuddyPress 1.5
-Tested up to: WordPress 4.4, BuddyPress 2.4
+Tested up to: WordPress 5.3.2, BuddyPress 5.1.1
 Stable tag: 0.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -96,8 +96,8 @@ Gives users the ability to 'like' content across your BuddyPress enabled site.
 
 = 0.1.5 =
 * Removed favorite/unfavorite button on activity items using jQuery.
-* Added function: view_who_likes().
-* Added hook: view_who_likes, will be adding more.
+* Added function: bp_like_view_who_likes().
+* Added hook: bp_like_view_who_likes, will be adding more.
 * Added function bp_like_get_num_likes() to return number of likes of an item.
 * Tidied up jQuery, now properly using no conflict mode, functions split up.
 * Fixed activity filter bug where custom text for 'Blog Post Likes' was not called.

@@ -4,6 +4,13 @@ Changes
 // Any changes placed here should be reflected in commit messages
 
 Branch: development
+7.1.2020
+- Added Avatar display support
+- Shortcode for listing all users who liked item
+- Support for Ajax and No Ajax.
+
+
+
 - If update is liked in a group, now posting to group as opposed to sitewide activity stream
 - Improved usage of text strings in move to help translation
 - Added functionality for liking blog posts
