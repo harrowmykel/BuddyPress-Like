@@ -3,6 +3,10 @@ Changes
 // This file is for development purposes only
 // Any changes placed here should be reflected in commit messages
 
+New Repository:
+https://github.com/harrowmykel/BuddyPress-Like-Ultimate
+
+
 Branch: development
 7.1.2020
 - Added Avatar display support

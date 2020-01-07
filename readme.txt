@@ -8,6 +8,13 @@ Stable tag: 0.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+
+This Plugin does not seem to be getting worked on,
+so I will be making more changes to this plugin here:
+
+https://github.com/harrowmykel/BuddyPress-Like-Ultimate
+
+
 Gives users the ability to 'like' content across your BuddyPress enabled site.
 
 == Information about this fork ==
