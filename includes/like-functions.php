@@ -122,10 +122,12 @@ function bp_like_add_user_like( $item_id, $type, $user_id = 0 ) {
         do_action("bp_like_${type}_add_like", $user_id, $item_id);
     }
 
-    ?>
+    //only echo if doing ajax
+    if(wp_doing_ajax()): ?>
     <span class="like-text"><?php echo bp_like_get_text( 'like' ); ?></span>
     <span class="unlike-text"><?php echo bp_like_get_text( 'unlike' ); ?></span>
-    <span class="like-count"><?php echo $liked_count; ?></span><?php
+    <span class="like-count"><?php echo $liked_count; ?></span>
+    <?php endif;
 }
 
 /**
